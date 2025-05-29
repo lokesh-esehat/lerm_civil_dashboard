@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="lerm_civil_dashboard.MainDashboard" owl="1">
+        <div class="vh-100 overflow-auto bg-muted">
+            <h2 class="mb-4 text-center">LERM Civil Dashboard</h2>
+            <ChartRenderer 
+                type="state.chartData.type" 
+                title="state.chartData.title" 
+                data="state.chartData.data"/>
+        </div>
+    </t>
+</templates>

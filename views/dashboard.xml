@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <record id="action_owl_lerm_civil_dashboard" model="ir.actions.client">
+            <field name="name">Lerm Dashboard</field>
+            <field name="tag">lerm_civil_dashboard.main_dashboard</field>
+        </record>
+
+        <menuitem name="Dashboard" id="menu_dashboard" sequence="10">
+            <menuitem name="LERM" id="main_dashboard" sequence="10" action="action_owl_lerm_civil_dashboard"/>    
+        </menuitem>  
+    </data>
+</odoo>
