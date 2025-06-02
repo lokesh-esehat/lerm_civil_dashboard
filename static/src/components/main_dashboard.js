@@ -10,20 +10,31 @@ import { loadJS } from "web.ajax";
 export class MainDashboard extends Component {
   setup() {
     this.state = useState({
-      chartData: {
-        type: "bar",
-        title: "Sample Bar Chart",
-        data: {
-          labels: ["A", "B", "C", "D"],
-          datasets: [
-            {
-              label: "Dataset 1",
-              data: [10, 20, 30, 40],
-              backgroundColor: ["#1abc9c", "#3498db", "#9b59b6", "#f39c12"],
-            },
-          ],
-        },
+      batches: [],
+      regions: [],
+      selected_region_id: 1,
+      selected_batch_id: 3,
+    });
+
+    useEffect(
+      () => {
+        this.onChangeBatch(undefined, this.state.selected_batch_id);
+        this.onChangeRegion(undefined, this.state.selected_region_id);
       },
+      () => [this.state.selected_batch_id, this.state.selected_region_id]
+    );
+
+    // this.state.gsk_po_attempting_candidate =
+    // this.state.gsk_po_attempting_candidate =
+
+    this.rpc = useService("rpc");
+
+    onWillStart(async () => {
+      await loadJS(
+        "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+      );
+      await this.getBatches();
+      await this.getRegions();
     });
   }
 }
