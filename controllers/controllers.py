@@ -1,37 +1,40 @@
-# -*- coding: utf-8 -*-
 from odoo import http
 from odoo.http import request
-import json
 from datetime import datetime
+from collections import defaultdict
+import json
 
+class LermCivilDashboard(http.Controller):
 
-class LermDashboard(http.Controller):
-        
-    @http.route(['/dashboard/get_data_by_date'], type="json", auth="user")
-    def get_data_by_date(self, **kw):
+    @http.route(['/dashboard/getdata'], type="json", auth="user", methods=["POST"])
+    def get_dashboard_data(self, **kw):
         start_date = kw.get('start_date')
         end_date = kw.get('end_date')
-        
-        # Convert string dates to datetime objects
-        start_dt = datetime.strptime(start_date, '%Y-%m-%d')
-        end_dt = datetime.strptime(end_date, '%Y-%m-%d')
-        
-        # Example query - adjust based on your models
+
+        # Parse and validate dates
+        try:
+            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+        except Exception as e:
+            return json.dumps({"error": "Invalid date format"})
+
+        # Search domain
         domain = [
-            ('date', '>=', start_date),
-            ('date', '<=', end_date)
+            ('sample_received_date', '>=', start_dt),
+            ('sample_received_date', '<=', end_dt),
         ]
-        
-        # Get your data from the models
-        records = request.env['your.model'].sudo().search(domain)
-        
-        # Process data as needed for your dashboard
-        # This is just an example structure
-        result = {
-            'total_count': len(records),
-            'start_date': start_date,
-            'end_date': end_date,
-            # Add other aggregated data here
-        }
-        
-        return json.dumps(result)
+
+        # Fetch matching records
+        samples = request.env['lerm.srf.sample'].sudo().search(domain)
+
+        # Count per state
+        state_counter = defaultdict(int)
+        for sample in samples:
+            state_counter[sample.state] += 1
+
+        state_data = [{"state": state, "count": count} for state, count in state_counter.items()]
+
+        return json.dumps({
+            "state_data": state_data,
+            "total_count": len(samples),
+        })

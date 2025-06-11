@@ -29,6 +29,8 @@
             'lerm_civil_dashboard/static/src/components/main_dashboard.xml',
             'lerm_civil_dashboard/static/src/components/chart_renderer/chart_renderer.js',
             'lerm_civil_dashboard/static/src/components/chart_renderer/chart_renderer.xml',
+            'lerm_civil_dashboard/static/src/components/kpi_box/kpi_box.js',
+            'lerm_civil_dashboard/static/src/components/kpi_box/kpi_box.xml',
         ],
         'web.assets_qweb': [
             'lerm_civil_dashboard/static/src/**/*.xml',
