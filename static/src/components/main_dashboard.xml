@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="lerm_civil_dashboard.MainDashboard" owl="1">
-        <div class="vh-100 overflow-auto bg-muted p-4">
-            <h2 class="mb-4 text-center">LERM Civil Dashboard</h2>
+        <div class="vh-100 p-4">
+            <h2 class="mb-4 text-center">Dashboard</h2>
             
             <!-- Date Selection Form -->
             <div class="row justify-content-center mb-4">
@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="card-body">
                             <form class="form-row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label for="start_date">From Date</label>
                                     <input 
                                         type="date" 
@@ -19,13 +19,23 @@
                                         t-model="state.start_date"
                                     />
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label for="end_date">To Date</label>
                                     <input 
                                         type="date" 
                                         class="form-control" 
                                         id="end_date" 
                                         t-model="state.end_date"
+                                    />
+                                </div>
+                                <!-- Add this above or within the form -->
+                                <div class="col-md-4">
+                                    <label for="month_picker">Select Month</label>
+                                    <input 
+                                        type="month" 
+                                        id="month_picker" 
+                                        class="form-control"
+                                        t-on-change="onMonthChange"
                                     />
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
@@ -38,17 +48,19 @@
             </div>
             <!-- Chart Display -->
             <t t-if="state.chart">
-                <div style="width: 600px; height: 600px;">
-                    <ChartRenderer type="state.chart.type" data="state.chart.data" title="state.chart.title"/>
-                </div>
-                <div class="row">
+                <div class="col-md-9 d-flex flex-wrap gap-3">
                     <t t-if="state.dashboardData">
-                        <t t-foreach="state.dashboardData.state_data" t-as="item" t-key="item.state">
+                       <t t-foreach="state.dashboardData.state_data" t-as="item" t-key="item.state">
                             <div class="col-md-3 mb-3">
-                                <KpiBox title="item.state_label" value="item.count" />
+                                <div class="kpi-box">
+                                    <KpiBox title="item.state_label" value="item.count" />
+                                </div>
                             </div>
                         </t>
                     </t>
+                </div>
+                <div class="col-md-3">
+                    <ChartRenderer type="state.chart.type" data="state.chart.data" title="state.chart.title"/>
                 </div>
             </t>
         </div>

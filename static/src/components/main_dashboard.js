@@ -5,12 +5,15 @@ import { ChartRenderer } from "./chart_renderer/chart_renderer";
 import { KpiBox } from "./kpi_box/kpi_box";
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { loadJS } from "web.ajax";
+// import { loadJS } from "@web/core/assets"
 const { Component, useRef, onMounted } = owl;
 const { useState, onWillStart } = owl.hooks;
 
 export class MainDashboard extends Component {
+  static components = { KpiBox };
   setup() {
     this.rpc = useService("rpc");
+    this.action = useService("action");
 
     this.state = useState({
       start_date: "",
@@ -95,6 +98,19 @@ export class MainDashboard extends Component {
     }
 
     this.state.isLoading = false;
+  }
+  onMonthChange(ev) {
+    const selectedMonth = ev.target.value; // Format: "2025-04"
+    if (selectedMonth) {
+      const [year, month] = selectedMonth.split("-");
+      const firstDay = `${year}-${month}-01`;
+      const lastDay = new Date(year, month, 0).toISOString().split("T")[0]; // last day of month
+
+      this.state.start_date = firstDay;
+      this.state.end_date = lastDay;
+
+      this.onChangeDate(firstDay, lastDay);
+    }
   }
 }
 

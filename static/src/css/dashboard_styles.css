@@ -1,0 +1,8 @@
+.kpi-box {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.kpi-box:hover {
+  transform: scale(1.03);
+}
