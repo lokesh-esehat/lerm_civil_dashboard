@@ -12,28 +12,13 @@ export class KpiBox extends Component {
   setup() {
     this.subjectRef = useRef("subject");
     this.valueRef = useRef("value");
-    this.actionService = useService("action"); // Changed from this.action to this.actionService
-
-    useEffect(
-      () => {
-        this.renderKPI();
-      },
-      () => [this.props]
-    );
-
-    onMounted(() => this.renderKPI());
+    this.actionService = useService("action");
   }
-
-  renderKPI() {
-    this.subjectRef.el.innerHTML = this.props.title;
-    this.valueRef.el.innerHTML = this.props.value;
+  onClick() {
+    this.env.bus.trigger("kpi-click", {
+      stateName: this.props.state,
+    });
   }
-
-  // viewAlloted() {
-  //   this.actionService.doAction(
-  //     "lerm_civil.test_sample_pending_allotted_action"
-  //   );
-  // }
 }
 
 KpiBox.template = "lerm_civil_dashboard.KpiBox";

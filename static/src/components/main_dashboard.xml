@@ -32,10 +32,11 @@
                                 <div class="col-md-4">
                                     <label for="month_picker">Select Month</label>
                                     <input 
-                                        type="month" 
-                                        id="month_picker" 
-                                        class="form-control"
-                                        t-on-change="onMonthChange"
+                                    type="month" 
+                                    id="month_picker" 
+                                    class="form-control"
+                                    t-model="state.month_value"
+                                    t-on-change="onMonthChange"
                                     />
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
@@ -48,19 +49,35 @@
             </div>
             <!-- Chart Display -->
             <t t-if="state.chart">
-                <div class="col-md-9 d-flex flex-wrap gap-3">
-                    <t t-if="state.dashboardData">
-                       <t t-foreach="state.dashboardData.state_data" t-as="item" t-key="item.state">
-                            <div class="col-md-3 mb-3">
-                                <div class="kpi-box">
-                                    <KpiBox title="item.state_label" value="item.count" />
-                                </div>
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <!-- KPI Box Row -->
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <t t-if="state.dashboardData">
+                                <t t-foreach="state.dashboardData.state_data" t-as="item" t-key="item.state">
+                                    <div class="kpi-box text-center" style="flex: 0 0 20%; max-width: 20%;" t-on-click="onKpiClick(item.state)">
+                                        <KpiBox title="item.state_label" value="item.count" state="item.state"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+
+                        <!-- Chart -->
+                        <div class="card h-">
+                            <div class="card-body">
+                                <ChartRenderer style="height: 200px; width: 200px;" type="state.chart.type" data="state.chart.data" title="state.chart.title"/>
                             </div>
-                        </t>
-                    </t>
-                </div>
-                <div class="col-md-3">
-                    <ChartRenderer type="state.chart.type" data="state.chart.data" title="state.chart.title"/>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- <div class="card h-100">
+                            <div class="card-body d-flex align-items-center justify-content-center">
+                            </div>
+                        </div> -->
+                    </div>
                 </div>
             </t>
         </div>

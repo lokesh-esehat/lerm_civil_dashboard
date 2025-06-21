@@ -13,11 +13,18 @@ export class MainDashboard extends Component {
   static components = { KpiBox };
   setup() {
     this.rpc = useService("rpc");
+    this.orm = useService("orm");
     this.action = useService("action");
 
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const defaultMonth = `${year}-${month}`;
+
     this.state = useState({
-      start_date: "",
-      end_date: "",
+      start_date: `${year}-${month}-01`,
+      end_date: new Date(year, month, 0).toISOString().split("T")[0],
+      month_value: defaultMonth,
       dashboardData: null,
       isLoading: false,
       dateRangeSelected: false,
@@ -104,12 +111,59 @@ export class MainDashboard extends Component {
     if (selectedMonth) {
       const [year, month] = selectedMonth.split("-");
       const firstDay = `${year}-${month}-01`;
-      const lastDay = new Date(year, month, 0).toISOString().split("T")[0]; // last day of month
+      const lastDay = new Date(year, month, 0).toISOString().split("T")[0];
 
       this.state.start_date = firstDay;
       this.state.end_date = lastDay;
+      this.state.month_value = selectedMonth;
 
       this.onChangeDate(firstDay, lastDay);
+    }
+  }
+  async onKpiClick(stateName) {
+    let actionXmlId = null;
+    let options = {};
+    const stateLabelMap = {
+      "1-allotment_pending": "Allotment Pending",
+      "2-alloted": "Alloted",
+      "3-pending_verification": "Pending Verification",
+      "4-in_report": "In Report",
+      "5-pending_approval": "Pending Approval",
+    };
+    switch (stateName) {
+      case "1-allotment_pending":
+        actionXmlId = "lerm_civil.test_sample_pending_allotment_action";
+        break;
+      case "2-alloted":
+        actionXmlId = "lerm_civil.test_sample_pending_allotted_action";
+        break;
+      case "3-pending_verification":
+        actionXmlId = "lerm_civil.sample_pending_verification_action";
+        break;
+      case "4-in_report":
+        actionXmlId = "lerm_civil.test_sample_pending_in_report_action";
+        break;
+      case "5-pending_approval":
+        actionXmlId = "lerm_civil.sample_pending_approval_action";
+        break;
+    }
+    if (actionXmlId) {
+      const domain = [
+        ["sample_received_date", ">=", this.state.start_date],
+        ["sample_received_date", "<=", this.state.end_date],
+        ["state", "=", stateName],
+      ];
+
+      this.action.doAction({
+        type: "ir.actions.act_window",
+        name: stateLabelMap[stateName] || "Sample Records",
+        res_model: "lerm.srf.sample",
+        domain: domain,
+        views: [
+          [false, "list"],
+          [false, "form"],
+        ],
+      });
     }
   }
 }
