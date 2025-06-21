@@ -73,10 +73,11 @@
 
                     <!-- Right Column -->
                     <div class="col-md-6">
-                        <!-- <div class="card h-100">
+                        <div class="card h-100">
                             <div class="card-body d-flex align-items-center justify-content-center">
+                                <ChartRenderer style="height: 200px; width: 200px;" type="state.bar_chart.type" data="state.bar_chart.data" title="state.bar_chart.title"/>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </t>
