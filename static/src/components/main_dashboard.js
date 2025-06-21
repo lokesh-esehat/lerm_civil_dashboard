@@ -107,7 +107,7 @@ export class MainDashboard extends Component {
     this.state.isLoading = false;
   }
   onMonthChange(ev) {
-    const selectedMonth = ev.target.value; // Format: "2025-04"
+    const selectedMonth = ev.target.value;
     if (selectedMonth) {
       const [year, month] = selectedMonth.split("-");
       const firstDay = `${year}-${month}-01`;
@@ -121,8 +121,6 @@ export class MainDashboard extends Component {
     }
   }
   async onKpiClick(stateName) {
-    let actionXmlId = null;
-    let options = {};
     const stateLabelMap = {
       "1-allotment_pending": "Allotment Pending",
       "2-alloted": "Alloted",
@@ -130,41 +128,22 @@ export class MainDashboard extends Component {
       "4-in_report": "In Report",
       "5-pending_approval": "Pending Approval",
     };
-    switch (stateName) {
-      case "1-allotment_pending":
-        actionXmlId = "lerm_civil.test_sample_pending_allotment_action";
-        break;
-      case "2-alloted":
-        actionXmlId = "lerm_civil.test_sample_pending_allotted_action";
-        break;
-      case "3-pending_verification":
-        actionXmlId = "lerm_civil.sample_pending_verification_action";
-        break;
-      case "4-in_report":
-        actionXmlId = "lerm_civil.test_sample_pending_in_report_action";
-        break;
-      case "5-pending_approval":
-        actionXmlId = "lerm_civil.sample_pending_approval_action";
-        break;
-    }
-    if (actionXmlId) {
-      const domain = [
-        ["sample_received_date", ">=", this.state.start_date],
-        ["sample_received_date", "<=", this.state.end_date],
-        ["state", "=", stateName],
-      ];
+    const domain = [
+      ["sample_received_date", ">=", this.state.start_date],
+      ["sample_received_date", "<=", this.state.end_date],
+      ["state", "=", stateName],
+    ];
 
-      this.action.doAction({
-        type: "ir.actions.act_window",
-        name: stateLabelMap[stateName] || "Sample Records",
-        res_model: "lerm.srf.sample",
-        domain: domain,
-        views: [
-          [false, "list"],
-          [false, "form"],
-        ],
-      });
-    }
+    this.action.doAction({
+      type: "ir.actions.act_window",
+      name: stateLabelMap[stateName] || "Sample Records",
+      res_model: "lerm.srf.sample",
+      domain: domain,
+      views: [
+        [false, "list"],
+        [false, "form"],
+      ],
+    });
   }
 }
 
